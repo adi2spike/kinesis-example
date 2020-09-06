@@ -34,7 +34,6 @@ import software.amazon.kinesis.retrieval.KinesisClientRecord;
 
 /**
  * Processes records retrieved from stock trades stream.
- *
  */
 public class StockTradeRecordProcessor implements ShardRecordProcessor {
 
@@ -65,7 +64,7 @@ public class StockTradeRecordProcessor implements ShardRecordProcessor {
 
     @Override
     public void processRecords(ProcessRecordsInput processRecordsInput) {
-         try {
+        try {
             log.info("Processing " + processRecordsInput.records().size() + " record(s)");
             processRecordsInput.records().forEach(r -> processRecord(r));
             // If it is time to report stats as per the reporting interval, report stats
@@ -88,9 +87,9 @@ public class StockTradeRecordProcessor implements ShardRecordProcessor {
     }
 
     private void reportStats() {
-	System.out.println("****** Shard " + kinesisShardId + " stats for last 1 minute ******\n" +
-	stockStats + "\n" +
-	"****************************************************************\n");
+        System.out.println("****** Shard " + kinesisShardId + " stats for last 1 minute ******\n" +
+                stockStats + "\n" +
+                "****************************************************************\n");
     }
 
     private void resetStats() {
@@ -101,11 +100,16 @@ public class StockTradeRecordProcessor implements ShardRecordProcessor {
         byte[] arr = new byte[record.data().remaining()];
         record.data().get(arr);
         StockTrade trade = StockTrade.fromJsonAsBytes(arr);
-       if (trade == null) {
+        if (trade == null) {
             log.warn("Skipping record. Unable to parse record into StockTrade. Partition Key: " + record.partitionKey());
             return;
         }
         stockStats.addStockTrade(trade);
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
