@@ -106,7 +106,7 @@ public class StockTradeRecordProcessor implements ShardRecordProcessor {
         }
         stockStats.addStockTrade(trade);
         try {
-            Thread.sleep(2000);
+            Thread.sleep(200);
         } catch (Exception e) {
             e.printStackTrace();
         }
